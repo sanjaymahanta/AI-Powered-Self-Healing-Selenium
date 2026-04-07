@@ -1,1 +1,18 @@
+# Sensitive files
+config.properties
+.env
+
+# Build files
 /target/
+/bin/
+
+# Test outputs
+/test-output/
+
+# Logs
+*.log
+
+# IDE files
+*.classpath
+*.project
+.settings/
