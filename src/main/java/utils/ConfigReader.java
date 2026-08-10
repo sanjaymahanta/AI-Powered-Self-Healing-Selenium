@@ -22,12 +22,22 @@ public class ConfigReader {
         }
     }
 
+    // 1. Purana method (wahi rakho)
     public static boolean isHealingEnabled() {
         return Boolean.parseBoolean(
                 properties.getProperty("healing.enabled", "false"));
     }
 
+    // 2. Purana method (wahi rakho)
     public static String getGeminiKey() {
         return properties.getProperty("gemini.key");
+    }
+
+    /**
+     * 🔥 Naya Method: Generic key reader
+     * Isse hum ai.type, model.name etc. sab nikal sakte hain
+     */
+    public static String getProperty(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
     }
 }

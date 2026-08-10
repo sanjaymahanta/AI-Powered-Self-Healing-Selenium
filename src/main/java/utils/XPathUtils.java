@@ -2,7 +2,7 @@ package utils;
 
 import org.openqa.selenium.By;
 
-public class CSSUtils {
+public class XPathUtils {
 
     public static String extractXPath(By locator) {
 

@@ -4,7 +4,7 @@ import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
-import utils.CSSUtils;
+import utils.XPathUtils;
 import java.util.concurrent.TimeUnit;
 
 public class GeminiHealer {
@@ -27,7 +27,7 @@ public class GeminiHealer {
     public By heal(String inputSignal, String pageSource) {
         try {
             // Safety: DOM bada ho sakta hai, isliye limit kar rahe hain
-            String dom = pageSource.substring(0, Math.min(pageSource.length(), 20000));
+            String dom = pageSource.substring(0, Math.min(pageSource.length(), 100000));
 
             // ✅ Exact Gemini JSON Structure
             JSONObject body = new JSONObject();
@@ -62,7 +62,7 @@ public class GeminiHealer {
                         .getJSONObject(0)
                         .getString("text");
 
-                return By.xpath(CSSUtils.sanitizeXPath(rawXpath));
+                return By.xpath(XPathUtils.sanitizeXPath(rawXpath));
             }
         } catch (Exception e) {
             System.err.println("Critical Failure: " + e.getMessage());

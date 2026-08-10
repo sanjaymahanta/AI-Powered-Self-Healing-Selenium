@@ -3,14 +3,14 @@ package tests;
 import java.time.Duration;
 import java.util.Collections;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert; // Assertion ke liye important import
 import org.testng.annotations.Test;
 
 import driver.SelfHealingDriver;
@@ -21,48 +21,46 @@ public class OrangeHRMTest {
     public void loginTest() {
    
         ChromeOptions options = new ChromeOptions();
-        
-       
         options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
         options.setExperimentalOption("useAutomationExtension", false);
         options.addArguments("--remote-allow-origins=*");
 
-        // 2. WebDriver Initialization
+        // 1. WebDriver Initialization
         WebDriver baseDriver = new ChromeDriver(options);
         
-        // Wrapping it with your AI Self-Healing Driver
+        // 2. Wrapping with AI Self-Healing Driver
         SelfHealingDriver driver = new SelfHealingDriver(baseDriver);
 
         try {
-            // 3. Navigation to Nexus Automation Portal
-            baseDriver.get("http://127.0.0.1:5500/index.html");
-            
-            // Bypass maximize() error by setting a manual large window size
+            // 3. Navigation (Bhai, local file ke liye file:/// use karna better hai)
+            baseDriver.get("http://127.0.0.1:5500/Testing.html");
             baseDriver.manage().window().maximize();
 
-            // 4. Intent-Based Finding (Description Only)
-            System.out.println("🚀 AI is finding the element using Description...");
-            driver.findElement(By.xpath("DESCRIPTION: find Login under Guest Login")).click();
+            // 4. Click Action (Idhar AI apna kamaal dikhayega agar ID change hui hai)
+            System.out.println("🚀 AI is finding and healing the element...");
+          driver.findElement(By.xpath("DESCRIPTION:find Login Now ")).click(); 
+
+            // 5. ASSERTION: Yahan hum check karenge ki success message aaya ya nahi
+            System.out.println("🧐 Validating the functional result...");
             
-            // 5. Alert Handling & Message Capture
-            WebDriverWait wait = new WebDriverWait(baseDriver, Duration.ofSeconds(10));
-            if (wait.until(ExpectedConditions.alertIsPresent()) != null) {
-                Alert alert = baseDriver.switchTo().alert();
-                
-                String alertMessage = alert.getText(); 
-                System.out.println("🔔 Alert Captured: " + alertMessage);
-                
-                alert.accept();
-                System.out.println("✅ Alert Accepted successfully.");
-            }
+            WebDriverWait wait = new WebDriverWait(baseDriver, Duration.ofSeconds(5));
             
+            // Hum check kar rahe hain ki 'success-msg' wala element visible hai ya nahi
+            WebElement successMsg = baseDriver.findElement(By.id("success-msg"));
+            
+            // ASSERTION LOGIC:
+            // Agar message visible hai -> Test Pass
+            // Agar message visible nahi hai -> Test Fail (Asli Bug caught!)
+            Assert.assertTrue(successMsg.isDisplayed(), 
+                "❌ FAILURE: Button was clicked (Healed), but the Login Success message did not appear. Functional Bug detected!");
+
+            System.out.println("✅ TEST PASSED: Feature is working fine.");
+
         } catch (Exception e) {
-            System.out.println("❌ Error occurred during execution: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("💥 TEST FAILED: " + e.getMessage());
+            Assert.fail("Test execution failed due to: " + e.getMessage());
         } finally {
-            // 6. Cleanup
-            System.out.println("🏁 Test Execution Completed.");
-            baseDriver.quit();
+            // baseDriver.quit(); // Test khatam hone ke baad browser band karne ke liye
         }
     }
 }
